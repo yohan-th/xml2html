@@ -1,0 +1,306 @@
+/*
+ * Copyright (C) 2018 Guido Berhoerster <guido+feed-preview@berhoerster.name>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+@import url("common.css");
+
+:root {
+  --blue-50-a30: rgba(10, 132, 255, 0.3);
+  --default-background: var(--grey-10);
+  --entry-background: var(--white-100);
+  --primary-color: var(--grey-90);
+  --secondary-color: var(--grey-50);
+  --button-focus-shadow: 0 0 0 1px var(--blue-50) inset,
+      0 0 0 1px var(--blue-50), 0 0 0 4px var(--blue-50-a30);
+  --primary-button-color: var(--white-100);
+  --primary-button-background-color: var(--blue-60);
+  --primary-button-hover-background-color: var(--blue-70);
+  --primary-button-active-background-color: var(--blue-80);
+  --secondary-button-color: var(--primary-color);
+  --secondary-button-background-color: var(--grey-90-a10);
+  --secondary-button-hover-background-color: var(--grey-90-a20);
+  --secondary-button-active-background-color: var(--grey-90-a30);
+  --entry-content-border: 1px solid var(--grey-90-a10);
+  --font-family-default: "Segoe UI", "San Fancisco", "Ubuntu", sans-serif;
+  --font-display-20: 300 36px var(--font-family-default);
+  --font-title-40: 300 28px var(--font-family-default);
+  --font-title-30: 300 22px var(--font-family-default);
+  --font-title-20: 500 17px var(--font-family-default);
+  --font-title-10: 500 13px var(--font-family-default);
+  --font-body-20: 400 15px var(--font-family-default);
+  --font-body-10: 400 13px var(--font-family-default);
+  --entry-shadow: 0 1px 4px var(--grey-90-a10);
+  --entry-outline: var(--entry-shadow), 0 0 0 5px var(--grey-30);
+}
+
+html,
+body {
+  /*
+   * revert some unwanted changes in "extension.css" disallowing text selection
+   * and forcing use of the default cursor for all contexts
+   */
+  -moz-user-select: auto;
+  -webkit-user-select: auto;
+  user-select: auto;
+  cursor: auto;
+}
+
+body {
+  padding: 16px;
+
+  background-color: var(--default-background);
+  background-image: url('feed.svg');
+  background-size: calc((100vw - 100ch) / 2);
+  background-repeat: no-repeat;
+  background-origin: padding-box;
+  background-position: bottom 0 left 0;
+  background-attachment: fixed;
+  height: 100%;
+  font: var(--font-body-20);
+}
+
+@media (width > calc(80ch + 2 * 200px)) and (height > calc(200px * 3)) {
+  /* minimum background image size is 200px */
+  body {
+    background-image: url('./feed.svg');
+    background-size: calc((100vw - 80ch) / 2);
+  }
+}
+
+@media (width > calc(80ch + 2 * 200px)) and (height > calc(200px * 3)) and
+    (width > calc(80ch + 33vh)) {
+  /*
+   * the background image should not be higher than three times the viewport
+   * height
+   */
+  body {
+    background-image: url('./feed.svg');
+    background-size: 33vh 33vh;
+  }
+}
+
+#feed-subscription {
+  width: 100%;
+  max-width: 80ch;
+  margin: 0 auto 32px auto;
+  padding: 0 16px;
+  white-space: nowrap;
+}
+
+#feed-subscription .main {
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  padding: 0;
+  border: none;
+   background-image: url('./arrow.svg');
+}
+
+#feed-subscription [name="main"] > * + * {
+  margin-left: 8px;
+}
+
+#feed-reader-selection {
+  -moz-appearance: none;
+  -webkit-appearance:none;
+  appearance: none;
+  border: none;
+  border-radius: 2px;
+  padding: 0 28px 0 8px;
+  height: 32px;
+  min-width: 30ch;
+  color: var(--secondary-button-color);
+  background-color: var(--secondary-button-background-color);
+  background-image: url('./arrow.svg');
+  background-repeat: no-repeat;
+  background-position: center right 8px;
+  background-size: 12px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  text-overflow: ellipsis;
+  
+}
+
+#feed-reader-selection:not(:disabled):hover {
+  background-color: var(--secondary-button-hover-background-color);
+}
+
+#feed-reader-selection:not(:disabled):active {
+  background-color: var(--secondary-button-active-background-color);
+}
+
+#feed-reader-selection option:hover,
+#feed-reader-selection option:active,
+#feed-reader-selection option:focus {
+  background-color: red;
+}
+
+#subscribe {
+  color: var(--primary-button-color);
+  background-color: var(--primary-button-background-color);
+  border-radius: 2px;
+  padding: 0 8px;
+  height: 32px;
+  min-width: 132px;
+  text-align: center;
+  border: none;
+}
+
+#subscribe:not(:disabled):hover {
+  background-color: var(--primary-button-hover-background-color);
+}
+
+#feed-reader-selection:not(:disabled):focus,
+#subscribe:not(:disabled):focus {
+  box-shadow: var(--button-focus-shadow);
+}
+
+#subscribe:not(:disabled):active {
+  background-color: var(--primary-button-active-background-color);
+}
+
+#feed-reader-selection:disabled,
+#subscribe:disabled {
+  opacity: .4;
+}
+
+#feed-header {
+  width: 100%;
+  max-width: 80ch;
+  min-width: 40ch;
+  padding: 16px;
+  margin: 0 auto;
+  border-top: 1px solid var(--grey-90-a10);
+}
+
+#feed-logo {
+  float: right;
+  max-width: 188px;
+  max-height: 48px;
+  margin: 0 0 8px 8px;
+}
+
+#feed-title {
+  font: var(--font-title-40);
+  margin: 0;
+}
+
+#feed-subtitle {
+  font: var(--font-body-20);
+  color: var(--secondary-color);
+  margin: 6px 0 0 0;
+}
+
+#no-entries-hint {
+  color: var(--secondary-color);
+  font: var(--font-display-20);
+  display: none;
+}
+
+#no-entries-hint:last-child {
+  display: block;
+}
+
+#no-entries-hint,
+.entry {
+
+  clear: both;
+  margin: 16px auto 0 auto;
+  padding: 16px;
+}
+
+.entry {
+
+  overflow: auto;
+  max-width: 80ch;
+  background: var(--entry-background);
+  border-radius: 4px;
+  box-shadow: var(--entry-shadow);
+  
+}
+
+#feed-header + article .entry {
+  margin-top: 16px;
+}
+
+.entry + .entry {
+  margin-top: 8px;
+}
+
+.entry:hover {
+  box-shadow: var(--entry-outline);
+
+}
+
+details.entry > summary {
+  display: flex;
+  align-items: center;
+  list-style-type: none;
+  padding: 0 8px;
+}
+
+details.entry > summary:focus {
+  outline: none;
+}
+
+details.entry > summary::before {
+  content: url('arrow.svg');
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  transform: rotate(-90deg);
+  transition: 100ms;
+}
+
+details.entry[open] > summary {
+  margin: 0 0 8px 0;
+
+}
+
+details.entry[open] > summary::after {
+  transform: rotate(0deg);
+  transition: 100ms;
+}
+
+.entry-header {
+  margin: 0 0 0 8px;
+
+}
+
+.entry-title {
+  font: var(--font-title-20);
+  margin: 0 0 4px 0;
+}
+
+.entry-date {
+  color: var(--secondary-color);
+  font: var(--font-body-10);
+  margin: 0;
+}
+
+.entry-content {
+
+  width: 100%;
+  height: 16em;
+  border: var(--entry-content-border);
+}
+
+.entry-files {
+  font: var(--font-body-10);
+  color: var(--secondary-color);
+  padding: 0 8px;
+}
+
+.entry-files-title {
+  font: var(--font-title-10);
+  margin: 0 0 4px 0;
+}
+
+.entry-files-list {
+  margin: 0;
+  padding: 0 0 0 32px;
+}

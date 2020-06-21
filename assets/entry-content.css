@@ -1,0 +1,50 @@
+/*
+ * Copyright (C) 2018 Guido Berhoerster <guido+feed-preview@berhoerster.name>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+@import url("common.css");
+
+html,
+body {
+  /*
+   * revert some unwanted changes in "extension.css" disallowing text selection
+   * and forcing use of the default cursor for all contexts
+   */
+  -moz-user-select: auto;
+  -webkit-user-select: auto;
+  user-select: auto;
+  cursor: auto;
+  display: unset;
+}
+
+body {
+  padding: 4px;
+  background-color: #f9f9fb;
+   background-image: url('feed.svg');
+  background-size: calc((100vw - 115ch) / 2);
+  background-repeat: no-repeat;
+  background-origin: padding-box;
+  background-position: bottom 0 left 0;
+  background-attachment: fixed;
+  height: 100%;
+  font: var(--font-body-20);
+}
+
+body > :first-child {
+  margin-block-start: 0;
+}
+
+p {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+img {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  max-width: 100%;
+}

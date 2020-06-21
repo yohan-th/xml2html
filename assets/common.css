@@ -1,0 +1,41 @@
+/*
+ * Copyright (C) 2018 Guido Berhoerster <guido+feed-preview@berhoerster.name>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+@import url("chrome://browser/content/extension.css");
+@import url("photon-colors.css");
+
+:root {
+  --link-color: var(--blue-50);
+  --link-hover-color: var(--blue-60);
+  --link-active-color: var(--blue-70);
+}
+
+html,
+body {
+  margin: 0;
+  line-height: 1.4em;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.15em;
+}
+
+:any-link {
+  color: var(--link-color);
+  text-decoration: none;
+}
+
+:any-link:hover {
+  color: var(--link-hover-color);
+  text-decoration: underline;
+}
+
+:any-link:active {
+  color: var(--link-active-color);
+  text-decoration: underline;
+}

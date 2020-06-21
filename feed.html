@@ -1,0 +1,104 @@
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<!--?xml version="1.0" encoding="UTF-8"?-->
+<html class=" idce_315 idc0_315"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+<!--
+   Copyright (C) 2018 Guido Berhoerster <guido+feed-preview@berhoerster.name>
+
+   This Source Code Form is subject to the terms of the Mozilla Public
+   License, v. 2.0. If a copy of the MPL was not distributed with this
+   file, You can obtain one at http://mozilla.org/MPL/2.0/.
+-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link id="default-stylesheet" rel="stylesheet" href="./assets/feed-preview.css">
+    <link id="feed-link" rel="alternate" type="application/rss+xml" href="PY_RSSLINK">
+    <title>Portfolio Yohan</title>
+    <style>
+    </style>
+  </head>
+  <body>
+  	<div class="container">
+    <template id="feed-logo-template"></template>
+    <template id="entry-template"></template>
+    <template id="entry-title-template"></template>
+    <template id="entry-title-linked-template"></template>
+    <template id="entry-files-list-template"></template>
+    <template id="entry-file-template"></template>
+    <form id="feed-subscription">
+      <div name="main">
+        <label for="feed-reader-selection">Subscribe to this feed using</label><select name="feed-reader-selection" id="feed-reader-selection" required="required"><option value="https://feedly.com/#subscription/feed/%s" selected="selected">Feedly</option><option value="https://www.flowreader.com/subscribe?url=%s">FlowReader</option><option value="https://www.inoreader.com/feed/%s">InoReader</option><option value="https://kouio.com/subscribe?url=%s">Kouio</option><option value="https://add.my.yahoo.com/rss?url=%s">My Yahoo</option><option value="https://www.netvibes.com/subscribe.php?url=%s">Netvibes</option><option value="https://www.newsblur.com/?url=%s">NewsBlur</option><option value="https://theoldreader.com/feeds/subscribe?url=%s">The Old Reader</option></select><button type="submit" name="subscribe" id="subscribe">Subscribe Now</button>
+    </div>
+    </div>
+     
+    </form>
+    <header id="feed-header">
+      <img id="feed-logo" src="PY_LOGO" alt="">
+    
+      <h1 id="feed-title">PY_TITLE</h1>
+      <p id="feed-subtitle">PY_SUBTITLE</p>
+    </header>
+    PY_ARTICLE
+  </body>
+</html>
+<script>
+/*
+ * Copyright (C) 2018 Guido Berhoerster <guido+feed-preview@berhoerster.name>
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ */
+
+'use strict';
+
+function updateFeedReaders(feedReaders) {
+    let feedReaderSelectionElement = document.forms['feed-subscription']
+            .elements['feed-reader-selection'];
+    for (let optionElement of
+            feedReaderSelectionElement.querySelectorAll('option')) {
+        optionElement.remove();
+    }
+
+    for (let feedReader of feedReaders) {
+        let optionElement = document.createElement('option');
+        optionElement.value = feedReader.urlTemplate;
+        optionElement.textContent = feedReader.title;
+        feedReaderSelectionElement.append(optionElement);
+    }
+
+    document.forms['feed-subscription'].elements['main'].disabled =
+            feedReaders.length === 0;
+}
+
+document.addEventListener('submit', ev => {
+    if (ev.target.id !== 'feed-subscription') {
+        return;
+    }
+
+    ev.preventDefault();
+    let subscribeUrl = ev.target.elements['feed-reader-selection'].value
+            .replace('%s', encodeURIComponent(document.documentURI));
+    console.log(`subscribing to feed using ${subscribeUrl}`);
+    window.location.href = subscribeUrl;
+});
+
+function onStorageChanged(changes, areaName) {
+    if (areaName !== 'sync' || changes.feedReaders === 'undefined') {
+        return;
+    }
+
+    // stored feed readers have been changed or deleted
+    let feedReaders = typeof changes.feedReaders.newValue !== 'undefined' ?
+            changes.feedReaders.newValue : [];
+    console.log('feedReaders changed to', feedReaders);
+    updateFeedReaders(feedReaders);
+}
+
+(async () => {
+    // initialize subscription form
+    let {feedReaders = []} = await browser.storage.sync.get('feedReaders');
+    updateFeedReaders(feedReaders);
+
+    browser.storage.onChanged.addListener(onStorageChanged);
+})();
+</script>
